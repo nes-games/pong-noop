@@ -6,11 +6,21 @@ Playfield {
 	$RIGHT : PPU.$SCREEN_WIDTH_PX - 16
 	
 	paddle1 : Paddle{
-//		x : $LEFT * 2,
-//		y : ($TOP + $BOTTOM)/ 2
+		x : $LEFT + 8, 
+		y : $TOP + ($BOTTOM / 2), 
+		number : 1
 	}
-	paddle2 : Paddle{}
-	ball : Ball{}
+	
+	paddle2 : Paddle{
+		x : $RIGHT - 8, 
+		y : $TOP + ($BOTTOM / 2), 
+		number : 2
+	}
+	
+	ball : Ball{
+		x : $LEFT + $RIGHT / 2, 
+		y : $TOP + ($BOTTOM / 2)
+	}
 	
 	draw() {
 		PPU.$hideBackground
@@ -26,14 +36,18 @@ Playfield {
 		
 		// top and bottom borders
 		for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $TOP / 8, col, 0x92)
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $BOTTOM / 8, col, 0x92)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $TOP / 8, col, 1)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $BOTTOM / 8, col, 1)
 		}
 		
 		// middle line
 		for (row : $TOP / 8; row < Playfield.$BOTTOM / 8; ++row) {
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 0x92)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 1)
 		}
+		
+		paddle1.draw
+		paddle2.draw
+		ball.draw
 		
 		PPU.$waitVBlank
 		PPU.$showBackground

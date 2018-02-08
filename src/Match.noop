@@ -7,14 +7,21 @@ Match {
 		if (State.$current = State.$MATCH) {
 			if (State.$start) {
 				FamiTone2NTSC.$playSfx(0, FamiTone2NTSC.$FT_SFX_CH0)
-				State.$start := false
 				Timer.$counter := 30
+				State.$start := false
 			} else if (Timer.$isStopped) {
 				playfield.draw
 				State.$next			
 			}
 		} else if (State.$current = State.$SERVE) {
-			
+			if (State.$start) {
+				FamiTone2NTSC.$playSfx(1, FamiTone2NTSC.$FT_SFX_CH1)
+				Timer.$counter := 30
+				State.$start := false
+			} else if (Timer.$isStopped) {
+				//TODO give the ball a direction
+				State.$next
+			}
 		} else if (State.$current = State.$PLAY) {
 			
 		} else if (State.$current = State.$POINT) {
