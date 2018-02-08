@@ -1,16 +1,36 @@
 Paddle {
 	
+	$PIXELS : 2 * Ball.$PIXELS
+	$SPEED : 1
+	
 	x : 0
 	y : 0
 	number : 0
+	direction : 0
 	
 	draw() {
 		if (number = 1) {
-			PPU.$drawSprite(2, x, y, 1, 0)
-			PPU.$drawSprite(3, x, y + 8, 1, 0)
+			PPU.$drawSprite(2, x, y, 2, 0)
+			PPU.$drawSprite(3, x, y + 8, 2, 0)
 		} else {
-			PPU.$drawSprite(4, x, y, 1, 0)
-			PPU.$drawSprite(5, x, y + 8, 1, 0)
+			PPU.$drawSprite(4, x, y, 3, 0)
+			PPU.$drawSprite(5, x, y + 8, 3, 0)
 		}
-	}	
+	}
+	
+	moveUp() {
+		if (y > Playfield.$TOP + $SPEED) {
+			y -= $SPEED
+			direction := -1
+			draw
+		}
+	}
+	
+	moveDown() {
+		if (y < Playfield.$BOTTOM - $PIXELS - $SPEED) {
+			y += $SPEED
+			direction := 1
+			draw
+		}
+	}
 }

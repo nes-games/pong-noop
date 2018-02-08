@@ -1,24 +1,24 @@
 Playfield {
 	
-	$TOP : 8
+	$TOP : 16
 	$BOTTOM : PPU.$SCREEN_HEIGHT_PX - 16
 	$LEFT : 8
 	$RIGHT : PPU.$SCREEN_WIDTH_PX - 16
 	
 	paddle1 : Paddle{
-		x : $LEFT + 8, 
+		x : $LEFT, 
 		y : $TOP + ($BOTTOM / 2), 
 		number : 1
 	}
 	
 	paddle2 : Paddle{
-		x : $RIGHT - 8, 
+		x : $RIGHT, 
 		y : $TOP + ($BOTTOM / 2), 
 		number : 2
 	}
 	
 	ball : Ball{
-		x : $LEFT + $RIGHT / 2, 
+		x : ($LEFT + $RIGHT) / 2, 
 		y : $TOP + ($BOTTOM / 2)
 	}
 	
@@ -42,7 +42,8 @@ Playfield {
 		
 		// middle line
 		for (row : $TOP / 8; row < Playfield.$BOTTOM / 8; ++row) {
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 1)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2 - 1, 2)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 3)
 		}
 		
 		paddle1.draw

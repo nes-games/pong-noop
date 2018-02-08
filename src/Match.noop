@@ -19,11 +19,24 @@ Match {
 				Timer.$counter := 30
 				State.$start := false
 			} else if (Timer.$isStopped) {
-				//TODO give the ball a direction
+				playfield.ball.speedX := -1
+				playfield.ball.speedY := -1
 				State.$next
 			}
 		} else if (State.$current = State.$PLAY) {
-			
+			if (Timer.$isStopped) {
+				Timer.$counter := 1
+				
+				playfield.ball.update
+				
+				Controllers.$update
+				
+				if (Controller1.$isPressedUp) {
+					playfield.paddle1.moveUp
+				} else if (Controller1.$isPressedDown) {
+					playfield.paddle1.moveDown
+				}
+			}
 		} else if (State.$current = State.$POINT) {
 			
 		} else if (State.$current = State.$SCORE) {

@@ -1,9 +1,27 @@
 Ball {
 	
+	$PIXELS : 8
+	
 	x : 0
 	y : 0
 	
+	speedX : SByte
+	speedY : SByte
+	
 	draw() {
 		PPU.$drawSprite(1, x, y, 1, 0)
+	}
+	
+	update() {
+		if (y < Playfield.$TOP or y > Playfield.$BOTTOM - $PIXELS) {
+			speedY := -speedY
+		} else if (x < Playfield.$LEFT or x + $PIXELS > Playfield.$RIGHT) {
+			speedX := -speedX
+		}
+
+		x += speedX
+		y += speedY
+
+		draw
 	}
 }
