@@ -36,7 +36,7 @@ Playfield {
 		
 		// top and bottom borders
 		for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $TOP / 8, col, 1)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, 1, col, 1)
 			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $BOTTOM / 8, col, 1)
 		}
 		

@@ -36,6 +36,10 @@ Match {
 				} else if (Controller1.$isPressedDown) {
 					playfield.paddle1.moveDown
 				}
+				
+				if (vsCPU) {
+					playfield.paddle2.moveForCPU(playfield.ball)
+				}
 			}
 		} else if (State.$current = State.$POINT) {
 			

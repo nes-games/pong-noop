@@ -27,10 +27,20 @@ Paddle {
 	}
 	
 	moveDown() {
-		if (y < Playfield.$BOTTOM - $PIXELS - $SPEED) {
+		if (y < Playfield.$BOTTOM - $PIXELS - $SPEED - 1) {
 			y += $SPEED
 			direction := 1
 			draw
 		}
 	}
+	
+	moveForCPU(Ball ball) {
+		if (ball.speedX > 0 and ball.x > (Playfield.$LEFT + Playfield.$RIGHT) / 2) {
+			if (ball.speedY > 0 and ball.y > this.y + $PIXELS) {
+				moveDown
+			} else if (ball.speedY < 0 and ball.y + Ball.$PIXELS < this.y) {
+				moveUp
+			}
+		}
+	}		
 }
