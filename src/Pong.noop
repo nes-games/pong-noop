@@ -1,0 +1,15 @@
+Pong extends Game {
+	
+	$reset() {
+		// game initialization
+		
+		forever {
+			// game logic goes here
+		}
+	}
+	
+	$nmi() {
+		// draw stuff goes here
+	}
+	
+}
