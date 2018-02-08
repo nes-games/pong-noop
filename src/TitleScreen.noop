@@ -1,6 +1,6 @@
 TitleScreen {
 	
-	$titleNameTable @PRG-ROM : [
+	_$titleNameTable @PRG-ROM : [
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
@@ -33,16 +33,63 @@ TitleScreen {
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	]
 	
-	$draw() {
-		PPU.$clearMask
+	_$titleAttrTable @PRG-ROM : [
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0], 
+		[0, 0, 0, 0, 0, 0, 0, 0]
+	]
+	
+	_$CURSOR : 1
+	
+	_draw() {
+		PPU.$hideBackground
+		PPU.$hideSprites
+		PPU.$update
 		
-		PPU.$drawBackground(PPU.$SCREEN_TOP_LEFT, $titleNameTable)
+		PPU.$drawBackground(PPU.$SCREEN_TOP_LEFT, _$titleNameTable)
 		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 21, (PPU.$SCREEN_WIDTH_TILES - 14) / 2, ["1 player match"])
 		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 23, (PPU.$SCREEN_WIDTH_TILES - 14) / 2, ["2 players match"])
-		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 27, (PPU.$SCREEN_WIDTH_TILES - 12) / 2, ["Parisoft 2017"])
+		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 27, (PPU.$SCREEN_WIDTH_TILES - 12) / 2, ["Parisoft 2018"])
+		
+		PPU.$setSpritesPalettes(Pong.$palettes)
+		PPU.$setBackgroundPalettes(Pong.$palettes)
+		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, _$titleAttrTable)
+		
+		_drawCursor
 		
 		PPU.$waitVBlank
-		PPU.$updateMask
+		PPU.$showBackground
+		PPU.$showSprites
+		PPU.$update
+	}
+	
+	_drawCursor() {
+		if (Pong.$match.vsCPU) {
+			PPU.$drawSprite(1, 50, 21 * 8 - 1, _$CURSOR, 0)
+		} else {
+			PPU.$drawSprite(1, 50, 23 * 8 - 1, _$CURSOR, 0)
+		}
+	}
+	
+	update() {
+		if (State.$start) {
+			Pong.$match.vsCPU := true
+			_draw
+			State.$start := false
+		} else {
+			Controller1.$update
+			
+			if ((Controller1.$isPressedSelect and not Controller1.$wasPressedSelect)
+					or (Controller1.$isPressedDown and not Controller1.$wasPressedDown)
+					or (Controller1.$isPressedUp and not Controller1.$wasPressedUp)) {
+				Pong.$match.vsCPU := not Pong.$match.vsCPU
+				
+				_drawCursor
+			} else if (Controller1.$isPressedStart or Controller1.$isPressedA) {
+				State.$next
+			}
+		}
 	}
 
 }

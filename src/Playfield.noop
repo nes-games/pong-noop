@@ -5,10 +5,16 @@ Playfield {
 	$LEFT : 8
 	$RIGHT : PPU.$SCREEN_WIDTH_PX - 16
 	
-	$draw() {
+	paddle1 : Paddle{
+//		x : $LEFT * 2,
+//		y : ($TOP + $BOTTOM)/ 2
+	}
+	paddle2 : Paddle{}
+	ball : Ball{}
+	
+	draw() {
 		PPU.$hideBackground
 		PPU.$hideSprites
-		PPU.$disableNMI
 		PPU.$update
 		
 		// clear screen
@@ -20,12 +26,12 @@ Playfield {
 		
 		// top and bottom borders
 		for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, Playfield.$TOP / 8, col, 0x92)
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, Playfield.$BOTTOM / 8, col, 0x92)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $TOP / 8, col, 0x92)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $BOTTOM / 8, col, 0x92)
 		}
 		
 		// middle line
-		for (row : Playfield.$TOP / 8; row < Playfield.$BOTTOM / 8; ++row) {
+		for (row : $TOP / 8; row < Playfield.$BOTTOM / 8; ++row) {
 			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 0x92)
 		}
 		

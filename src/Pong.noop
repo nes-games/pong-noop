@@ -1,15 +1,41 @@
 Pong extends Game {
 	
+	$sfx @PRG-ROM : "file://pong-sfx.asm"
+	$spGraphics @CHR-ROM : "file://graphics.chr"
+	$bgGraphics @CHR-ROM : "file://graphics.chr"
+	$palettes @PRG-ROM : [
+		[0x1D, 0x30, 0x30, 0x30],
+		[0x1D, 0x30, 0x30, 0x30],
+		[0x1D, 0x30, 0x30, 0x30],
+		[0x1D, 0x30, 0x30, 0x30] 
+//		[0x1D, 0x02, 0x02, 0x02], 
+//		[0x1D, 0x16, 0x16, 0x16], 
+//		[0x37, 0x29, 0x29, 0x29]
+	]
+	
+	$title : TitleScreen
+	$match : Match
+	
 	$reset() {
-		// game initialization
+		FamiTone2NTSC.$stopMusic//TODO change to init()
+		FamiTone2NTSC.$openSfx($sfx)
+		
+		PPU.$hideBackground
+		PPU.$hideSprites
+		PPU.$update
 		
 		forever {
-			// game logic goes here
+			if (State.$current = State.$TITLE) {
+				$title.update
+			} else {
+				$match.update
+			}
 		}
 	}
 	
 	$nmi() {
-		// draw stuff goes here
+		FamiTone2NTSC.$update
+		Timer.$update
 	}
 	
 }

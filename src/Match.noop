@@ -1,3 +1,30 @@
 Match {
 
+	vsCPU : true
+	playfield : Playfield
+
+	update() {
+		if (State.$current = State.$MATCH) {
+			if (State.$start) {
+				FamiTone2NTSC.$playSfx(0, FamiTone2NTSC.$FT_SFX_CH0)
+				State.$start := false
+				Timer.$counter := 30
+			} else if (Timer.$isStopped) {
+				playfield.draw
+				State.$next			
+			}
+		} else if (State.$current = State.$SERVE) {
+			
+		} else if (State.$current = State.$PLAY) {
+			
+		} else if (State.$current = State.$POINT) {
+			
+		} else if (State.$current = State.$SCORE) {
+			
+		} else if (State.$current = State.$GAME_OVER) {
+			
+		} else if (State.$current = State.$PAUSE) {
+			
+		}
+	}
 }
