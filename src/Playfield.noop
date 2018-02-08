@@ -1,0 +1,37 @@
+Playfield {
+	
+	$TOP : 8
+	$BOTTOM : PPU.$SCREEN_HEIGHT_PX - 16
+	$LEFT : 8
+	$RIGHT : PPU.$SCREEN_WIDTH_PX - 16
+	
+	$draw() {
+		PPU.$hideBackground
+		PPU.$hideSprites
+		PPU.$disableNMI
+		PPU.$update
+		
+		// clear screen
+		for (row : 0; row < PPU.$SCREEN_HEIGHT_TILES; ++row) {
+			for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
+				PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, col, 0)
+			}
+		}
+		
+		// top and bottom borders
+		for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, Playfield.$TOP / 8, col, 0x92)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, Playfield.$BOTTOM / 8, col, 0x92)
+		}
+		
+		// middle line
+		for (row : Playfield.$TOP / 8; row < Playfield.$BOTTOM / 8; ++row) {
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 0x92)
+		}
+		
+		PPU.$waitVBlank
+		PPU.$showBackground
+		PPU.$showSprites
+		PPU.$update
+	}
+}

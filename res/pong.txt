@@ -1,0 +1,56 @@
+TITLE
+	if press select
+		change mode
+	if press left or right
+		change color
+	if press start 
+		move to MATCH
+MATCH
+	draw playfield  
+	move to SERVE
+SERVE
+	if start 
+		start counter and play a sound
+	else if counter < time
+		increment counter
+	else
+		release the ball
+		move to PLAY
+PLAY
+	if press up1 or down1
+		move paddle1
+	if mode = vs_cpu
+		move paddle2_by_ia
+	else if press up2 or down2
+		move paddle2
+	move the ball
+	check collisions
+	check point
+	if point
+		move to POINT
+	else if press start
+		move to PAUSE
+POINT
+	if start
+		start counter and play a sound
+	else if counter < time 
+		increment counter 
+	else move to SCORE
+SCORE
+	if start 
+		start counter, play a sound and increment score
+	else if counter < time
+		increment counter
+	else if score = 15 
+		move to GAME_OVER
+	else
+		move to SERVE
+GAME_OVER
+	if start 
+		start counter, play a sound and show message
+	else if counter < time  
+		increment counter 
+	else move to TITLE
+PAUSE
+	if press start
+		move to PLAY

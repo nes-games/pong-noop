@@ -1,0 +1,30 @@
+State {
+	
+	$TITLE : 0
+	$MATCH : $TITLE + 1
+	$SERVE : $MATCH + 1
+	$PLAY : $SERVE + 1
+	$POINT : $PLAY + 1
+	$SCORE : $POINT + 1
+	$GAME_OVER : $SCORE + 1
+	$PAUSE : $GAME_OVER + 1
+	
+	_$FIRST : $TITLE
+	_$LAST : $PAUSE
+	
+	$current : _$FIRST
+	$start : true
+	
+	$next() @Inline {
+		if (++$current > _$LAST) {
+			$current := _$FIRST
+		}
+		
+		$start := true
+	}
+	
+	$goTo(Byte state) {
+		$current := state
+		$start := true
+	}
+}
