@@ -76,15 +76,15 @@ Match {
 		} else if (State.$current = State.$SCORE) {
 			if (State.$start) {
 				if (playfield.ball.x > Playfield.$RIGHT) {
-					++playfield.score1
-//					playfield.drawScore1
+					playfield.score1 += 1
+					playfield.drawScore1
 				} else {
-					++playfield.score2
-//					playfield.drawScore2
+					playfield.score2 += 1
+					playfield.drawScore2
 				}
 				
 				FamiTone2NTSC.$playSfx($SFX_SCORE, FamiTone2NTSC.$FT_SFX_CH0)
-				Timer.$counter := 10
+				Timer.$counter := 15
 				State.$start := false
 			} else if (Timer.$isStopped) {
 				if (playfield.score1 >= $MAX_SCORE or playfield.score2 >= $MAX_SCORE) {

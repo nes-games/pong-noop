@@ -38,14 +38,12 @@ Paddle {
 	moveForCPU(Ball ball) {
 		if (ball.speedX > 0 and ball.x > (Playfield.$LEFT + Playfield.$RIGHT) / 3) {
 			if (ball.y >= this.y + $HEIGHT_PX) {
-				moveDown
+				return moveDown
 			} else if (ball.y + Ball.$HEIGHT_PX <= this.y) {
-				moveUp
-			} else {
-				direction := 0
+				return moveUp
 			}
-		} else {
-			direction := 0
 		}
+
+		direction := 0
 	}		
 }

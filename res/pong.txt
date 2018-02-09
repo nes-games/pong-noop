@@ -54,3 +54,19 @@ GAME_OVER
 PAUSE
 	if press start
 		move to PLAY
+
+000
+0 0
+000
+0 0
+000
+
+bugs
+	1.
+		p1 : Paddle{ x : 0 }
+		p2 : Paddle{ x : p1.x <- "p1 cannot be used before declared" }
+	2.
+		method(Byte b) { }
+		method <- invocation without brackets dont validade params
+	3.
+		++obj.var dont works

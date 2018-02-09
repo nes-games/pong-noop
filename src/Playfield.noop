@@ -5,6 +5,9 @@ Playfield {
 	$LEFT : 8
 	$RIGHT : PPU.$SCREEN_WIDTH_PX - 8
 	
+	$TILE_OFF : 0
+	$TILE_ON : 1
+	
 	paddle1 : Paddle{ number : 1 }
 	paddle2 : Paddle{ number : 2 }
 	ball : Ball
@@ -51,14 +54,14 @@ Playfield {
 		// clear screen
 		for (row : 0; row < PPU.$SCREEN_HEIGHT_TILES; ++row) {
 			for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
-				PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, col, 0)
+				PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, col, $TILE_OFF)
 			}
 		}
 		
 		// top and bottom borders
 		for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, 1, col, 1)
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $BOTTOM / 8, col, 1)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, 1, col, $TILE_ON)
+			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $BOTTOM / 8, col, $TILE_ON)
 		}
 		
 		// middle line
@@ -87,7 +90,8 @@ Playfield {
 	drawScore1() {
 		lhs : score1 / 10
 		rhs : Math.$mod as Byte
-		
+//		_drawDigit(0, 24, lhs)
+		_drawDigit(1, 56, rhs)
 //		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, ($TOP / 8) + 1, 4, $digits[lhs])
 //		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, ($TOP / 8) + 1, 8, $digits[rhs])
 	}
@@ -95,8 +99,82 @@ Playfield {
 	drawScore2() {
 		lhs : score2 / 10
 		rhs : Math.$mod as Byte
-
+//		_drawDigit(2, 160, lhs)
+		_drawDigit(3, 192, rhs)
 //		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, ($TOP / 8) + 1, 21, $digits[lhs])
 //		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, ($TOP / 8) + 1, 25, $digits[rhs])
+	}
+	
+	_drawDigit(Byte pos, Byte xOffset, Byte digit) {
+		pos := 10 + (pos * 13) 
+		
+		// draws an 8 using a 5x3 table of tiles
+		// 1st line
+		PPU.$drawSprite(pos + 0, xOffset + 00, 24, $TILE_ON, 0)
+		PPU.$drawSprite(pos + 1, xOffset + 08, 24, $TILE_ON, 0)
+		PPU.$drawSprite(pos + 2, xOffset + 16, 24, $TILE_ON, 0)
+		// 2nd line
+		PPU.$drawSprite(pos + 3, xOffset + 00, 32, $TILE_ON, 0)
+		PPU.$drawSprite(pos + 4, xOffset + 16, 32, $TILE_ON, 0)
+		// 3rd line
+		PPU.$drawSprite(pos + 5, xOffset + 00, 40, $TILE_ON, 0)
+		PPU.$drawSprite(pos + 6, xOffset + 08, 40, $TILE_ON, 0)
+		PPU.$drawSprite(pos + 7, xOffset + 16, 40, $TILE_ON, 0)
+		// 4th line
+		PPU.$drawSprite(pos + 8, xOffset + 00, 48, $TILE_ON, 0)
+		PPU.$drawSprite(pos + 9, xOffset + 16, 48, $TILE_ON, 0)
+		// 5th line
+		PPU.$drawSprite(pos + 10, xOffset + 00, 56, $TILE_ON, 0)
+		PPU.$drawSprite(pos + 11, xOffset + 08, 56, $TILE_ON, 0)
+		PPU.$drawSprite(pos + 12, xOffset + 16, 56, $TILE_ON, 0)
+
+		//derivates all from 8
+
+		if (digit = 0) {
+			// 3rd line
+			PPU.$drawSprite(pos + 6, xOffset + 08, 40, $TILE_OFF, 0)
+		} else if (digit = 1) {
+			// 1st line
+			PPU.$drawSprite(pos + 0, xOffset + 00, 24, $TILE_OFF, 0)
+			PPU.$drawSprite(pos + 1, xOffset + 08, 24, $TILE_OFF, 0)
+			// 2nd line
+			PPU.$drawSprite(pos + 3, xOffset + 00, 32, $TILE_OFF, 0)
+			// 3rd line
+			PPU.$drawSprite(pos + 5, xOffset + 00, 40, $TILE_OFF, 0)
+			PPU.$drawSprite(pos + 6, xOffset + 08, 40, $TILE_OFF, 0)
+			// 4th line
+			PPU.$drawSprite(pos + 8, xOffset + 00, 48, $TILE_OFF, 0)
+			// 5th line
+			PPU.$drawSprite(pos + 10, xOffset + 00, 56, $TILE_OFF, 0)
+			PPU.$drawSprite(pos + 11, xOffset + 08, 56, $TILE_OFF, 0)
+		} else if (digit = 2) {
+			// 2nd line
+			PPU.$drawSprite(pos + 3, xOffset + 00, 32, $TILE_OFF, 0)
+			// 4th line
+			PPU.$drawSprite(pos + 9, xOffset + 16, 48, $TILE_OFF, 0)
+		} else if (digit = 3) {
+			// 2nd line
+			PPU.$drawSprite(pos + 3, xOffset + 00, 32, $TILE_OFF, 0)
+			PPU.$drawSprite(pos + 4, xOffset + 16, 32, $TILE_ON, 0)
+			// 4th line
+			PPU.$drawSprite(pos + 8, xOffset + 00, 48, $TILE_OFF, 0)
+			PPU.$drawSprite(pos + 9, xOffset + 16, 48, $TILE_ON, 0)
+		} else if (digit = 4) {
+			// 1st line
+			PPU.$drawSprite(pos + 1, xOffset + 08, 24, $TILE_OFF, 0)
+			// 4th line
+			PPU.$drawSprite(pos + 8, xOffset + 00, 48, $TILE_OFF, 0)
+			// 5th line
+			PPU.$drawSprite(pos + 10, xOffset + 00, 56, $TILE_OFF, 0)
+			PPU.$drawSprite(pos + 11, xOffset + 08, 56, $TILE_OFF, 0)
+		} else if (digit = 5) {
+			// 2nd line
+			PPU.$drawSprite(pos + 4, xOffset + 16, 32, $TILE_OFF, 0)
+			// 4th line
+			PPU.$drawSprite(pos + 8, xOffset + 00, 48, $TILE_OFF, 0)
+		} else if (digit = 6) {
+			// 2nd line
+			PPU.$drawSprite(pos + 4, xOffset + 16, 32, $TILE_OFF, 0)
+		}
 	}
 }
