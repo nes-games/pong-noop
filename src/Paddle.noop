@@ -1,12 +1,13 @@
 Paddle {
 	
-	$PIXELS : 2 * Ball.$PIXELS
-	$SPEED : 1
+	$WIDTH_PX : 4
+	$HEIGHT_PX : 2 * Ball.$HEIGHT_PX
+	$SPEED : 2
 	
 	x : 0
 	y : 0
 	number : 0
-	direction : 0
+	direction : SByte
 	
 	draw() {
 		if (number = 1) {
@@ -27,7 +28,7 @@ Paddle {
 	}
 	
 	moveDown() {
-		if (y < Playfield.$BOTTOM - $PIXELS - $SPEED - 1) {
+		if (y < Playfield.$BOTTOM - $HEIGHT_PX - $SPEED - 1) {
 			y += $SPEED
 			direction := 1
 			draw
@@ -35,12 +36,16 @@ Paddle {
 	}
 	
 	moveForCPU(Ball ball) {
-		if (ball.speedX > 0 and ball.x > (Playfield.$LEFT + Playfield.$RIGHT) / 2) {
-			if (ball.speedY > 0 and ball.y > this.y + $PIXELS) {
+		if (ball.speedX > 0 and ball.x > (Playfield.$LEFT + Playfield.$RIGHT) / 3) {
+			if (ball.y >= this.y + $HEIGHT_PX) {
 				moveDown
-			} else if (ball.speedY < 0 and ball.y + Ball.$PIXELS < this.y) {
+			} else if (ball.y + Ball.$HEIGHT_PX <= this.y) {
 				moveUp
+			} else {
+				direction := 0
 			}
+		} else {
+			direction := 0
 		}
 	}		
 }

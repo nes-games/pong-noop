@@ -1,6 +1,9 @@
 Ball {
 	
-	$PIXELS : 8
+	$WIDTH_PX : 8
+	$HEIGHT_PX : 8
+	$MAX_SPEED_UP : -2
+	$MAX_SPEED_DOWN : 2
 	
 	x : 0
 	y : 0
@@ -8,20 +11,62 @@ Ball {
 	speedX : SByte
 	speedY : SByte
 	
+	out : false
+	
 	draw() {
 		PPU.$drawSprite(1, x, y, 1, 0)
 	}
 	
-	update() {
-		if (y < Playfield.$TOP or y > Playfield.$BOTTOM - $PIXELS) {
+	update(Paddle paddle1, Paddle paddle2) {
+		if (y < Playfield.$TOP) {
+			_$playHitFx
+			y := Playfield.$TOP
 			speedY := -speedY
-		} else if (x < Playfield.$LEFT or x + $PIXELS > Playfield.$RIGHT) {
+		} else if (y > Playfield.$BOTTOM - $HEIGHT_PX) {
+			_$playHitFx
+			y := Playfield.$BOTTOM - $HEIGHT_PX - 1
+			speedY := -speedY
+		} else if (x < Playfield.$LEFT or x > Playfield.$RIGHT) {
+			out := true
+		} else if (x < paddle1.x + Paddle.$WIDTH_PX * 2 
+				and y < paddle1.y + Paddle.$HEIGHT_PX
+				and y + $HEIGHT_PX > paddle1.y) { // ball hits left paddle
+			_$playHitFx
+			
+			x := paddle1.x + Paddle.$WIDTH_PX * 2 + 1
+			
+			if (paddle1.direction < 0 and speedY > $MAX_SPEED_UP) {
+				speedY -= 1
+			} else if (paddle1.direction > 0 and speedY < $MAX_SPEED_DOWN) {
+				speedY += 1
+			}
+				
+			speedX := -speedX
+		} else if (x + $WIDTH_PX > paddle2.x
+				and y < paddle2.y + Paddle.$HEIGHT_PX
+				and y + $HEIGHT_PX > paddle2.y) {
+			_$playHitFx
+			
+			x := paddle2.x - $WIDTH_PX
+			
+			if (paddle2.direction < 0 and speedY > $MAX_SPEED_UP) {
+				speedY -= 1
+			} else if (paddle2.direction > 0 and speedY < $MAX_SPEED_DOWN) {
+				speedY += 1
+			}
+				
 			speedX := -speedX
 		}
 
-		x += speedX
-		y += speedY
+		if (not out) {
+			x += speedX
+			y += speedY
+		}
 
 		draw
+	}
+	
+	_$playHitFx() @Inline {
+		FamiTone2NTSC.$playSfx(Match.$SFX_HIT, FamiTone2NTSC.$FT_SFX_CH0)
 	}
 }

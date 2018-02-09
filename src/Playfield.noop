@@ -3,29 +3,50 @@ Playfield {
 	$TOP : 16
 	$BOTTOM : PPU.$SCREEN_HEIGHT_PX - 16
 	$LEFT : 8
-	$RIGHT : PPU.$SCREEN_WIDTH_PX - 16
+	$RIGHT : PPU.$SCREEN_WIDTH_PX - 8
 	
-	paddle1 : Paddle{
-		x : $LEFT, 
-		y : $TOP + ($BOTTOM / 2), 
-		number : 1
+	paddle1 : Paddle{ number : 1 }
+	paddle2 : Paddle{ number : 2 }
+	ball : Ball
+	
+	score1 : 0
+	score2 : 0
+	
+	reset() {
+		score1 := 0
+		score2 := 0
+		
+		_resetBallAndPaddles		
 	}
 	
-	paddle2 : Paddle{
-		x : $RIGHT, 
-		y : $TOP + ($BOTTOM / 2), 
-		number : 2
+	_resetBallAndPaddles() {
+		ball.x := ($LEFT + $RIGHT) / 2 - Ball.$WIDTH_PX / 2 
+		ball.y := ($TOP + $BOTTOM) / 2 - Ball.$HEIGHT_PX / 2
+		ball.speedX := 0
+		ball.speedY := 0
+		ball.out := false
+		
+		paddle1.x := $LEFT
+		paddle1.y := ($TOP + $BOTTOM / 2) - Paddle.$HEIGHT_PX / 2
+		paddle1.direction := 0
+		
+		paddle2.x := $RIGHT - Paddle.$WIDTH_PX 
+		paddle2.y := ($TOP + $BOTTOM / 2) - Paddle.$HEIGHT_PX / 2
+		paddle2.direction := 0
 	}
 	
-	ball : Ball{
-		x : ($LEFT + $RIGHT) / 2, 
-		y : $TOP + ($BOTTOM / 2)
+	restart() {
+		_resetBallAndPaddles
+		_drawBallAndPaddles
 	}
 	
 	draw() {
 		PPU.$hideBackground
 		PPU.$hideSprites
 		PPU.$update
+		
+		PPU.$setBackgroundPalettes(Pong.$palettes)
+		PPU.$setSpritesPalettes(Pong.$palettes)
 		
 		// clear screen
 		for (row : 0; row < PPU.$SCREEN_HEIGHT_TILES; ++row) {
@@ -46,13 +67,36 @@ Playfield {
 			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 3)
 		}
 		
-		paddle1.draw
-		paddle2.draw
-		ball.draw
+		drawScore1
+		drawScore2
+		
+		_drawBallAndPaddles
 		
 		PPU.$waitVBlank
 		PPU.$showBackground
 		PPU.$showSprites
 		PPU.$update
+	}
+	
+	_drawBallAndPaddles() {
+		ball.draw
+		paddle1.draw
+		paddle2.draw
+	}
+	
+	drawScore1() {
+		lhs : score1 / 10
+		rhs : Math.$mod as Byte
+		
+//		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, ($TOP / 8) + 1, 4, $digits[lhs])
+//		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, ($TOP / 8) + 1, 8, $digits[rhs])
+	}
+	
+	drawScore2() {
+		lhs : score2 / 10
+		rhs : Math.$mod as Byte
+
+//		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, ($TOP / 8) + 1, 21, $digits[lhs])
+//		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, ($TOP / 8) + 1, 25, $digits[rhs])
 	}
 }

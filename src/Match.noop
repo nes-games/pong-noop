@@ -1,58 +1,107 @@
 Match {
 
+	$SFX_HIT : 0
+	$SFX_ALARM : 1
+	$SFX_SCORE : 2
+	$MAX_SCORE : 15
+	
 	vsCPU : true
 	playfield : Playfield
 
 	update() {
 		if (State.$current = State.$MATCH) {
 			if (State.$start) {
-				FamiTone2NTSC.$playSfx(0, FamiTone2NTSC.$FT_SFX_CH0)
+				FamiTone2NTSC.$playSfx($SFX_HIT, FamiTone2NTSC.$FT_SFX_CH0)
 				Timer.$counter := 30
 				State.$start := false
 			} else if (Timer.$isStopped) {
+				playfield.reset
 				playfield.draw
 				State.$next			
 			}
 		} else if (State.$current = State.$SERVE) {
 			if (State.$start) {
-				FamiTone2NTSC.$playSfx(1, FamiTone2NTSC.$FT_SFX_CH1)
+				playfield.restart
+				FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
 				Timer.$counter := 30
 				State.$start := false
 			} else if (Timer.$isStopped) {
-				playfield.ball.speedX := -1
-				playfield.ball.speedY := -1
+				playfield.ball.speedX := -3
+				playfield.ball.speedY := 0
 				State.$next
 			}
 		} else if (State.$current = State.$PLAY) {
 			if (Timer.$isStopped) {
 				Timer.$counter := 1
 				
-				playfield.ball.update
+				playfield.ball.update(playfield.paddle1, playfield.paddle2)
 				
-				Controllers.$update
+				if (playfield.ball.out) {
+					State.$next
+				} else {
+					Controllers.$update
 				
-				if (Controller1.$isPressedUp) {
-					playfield.paddle1.moveUp
-				} else if (Controller1.$isPressedDown) {
-					playfield.paddle1.moveDown
-				}
+					if (Controller1.$isPressedUp) {
+						playfield.paddle1.moveUp
+					} else if (Controller1.$isPressedDown) {
+						playfield.paddle1.moveDown
+					} else {
+						playfield.paddle1.direction := 0
+					}
 				
-				if (vsCPU) {
-					playfield.paddle2.moveForCPU(playfield.ball)
-				} else if (Controller2.$isPressedUp) {
-					playfield.paddle1.moveUp
-				} else if (Controller2.$isPressedDown) {
-					playfield.paddle1.moveDown
+					if (vsCPU) {
+						playfield.paddle2.moveForCPU(playfield.ball)
+					} else if (Controller2.$isPressedUp) {
+						playfield.paddle1.moveUp
+					} else if (Controller2.$isPressedDown) {
+						playfield.paddle1.moveDown
+					} else {
+						playfield.paddle2.direction := 0
+					}
+					
+					if ((Controller1.$isPressedStart and not Controller1.$wasPressedStart) 
+							or (not vsCPU and Controller2.$isPressedStart and not Controller2.$wasPressedStart)) {
+						State.$goTo(State.$PAUSE)
+					}
 				}
 			}
 		} else if (State.$current = State.$POINT) {
-			
+			if (State.$start) {
+				FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+				Timer.$counter := 30
+				State.$start := false
+			} else if (Timer.$isStopped) {
+				State.$next
+			}
 		} else if (State.$current = State.$SCORE) {
-			
+			if (State.$start) {
+				if (playfield.ball.x > Playfield.$RIGHT) {
+					++playfield.score1
+//					playfield.drawScore1
+				} else {
+					++playfield.score2
+//					playfield.drawScore2
+				}
+				
+				FamiTone2NTSC.$playSfx($SFX_SCORE, FamiTone2NTSC.$FT_SFX_CH0)
+				Timer.$counter := 10
+				State.$start := false
+			} else if (Timer.$isStopped) {
+				if (playfield.score1 >= $MAX_SCORE or playfield.score2 >= $MAX_SCORE) {
+					State.$next
+				} else {
+					State.$goTo(State.$SERVE)
+				}
+			}
 		} else if (State.$current = State.$GAME_OVER) {
 			
 		} else if (State.$current = State.$PAUSE) {
+			Controllers.$update
 			
+			if ((Controller1.$isPressedStart and not Controller1.$wasPressedStart) 
+					or (not vsCPU and Controller2.$isPressedStart and not Controller2.$wasPressedStart)) {
+				State.$goTo(State.$PLAY)
+			}
 		}
 	}
 }

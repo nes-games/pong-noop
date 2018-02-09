@@ -23,7 +23,7 @@ Pong extends Game {
 		PPU.$hideBackground
 		PPU.$hideSprites
 		PPU.$update
-		
+		State.$current := State.$MATCH
 		forever {
 			if (State.$current = State.$TITLE) {
 				$title.update
