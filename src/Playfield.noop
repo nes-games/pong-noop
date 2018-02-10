@@ -8,7 +8,7 @@ Playfield {
 	$TILE_OFF : 0
 	$TILE_ON : 1
 	
-	$attrTable @CHR-ROM : Byte[8][8]
+	$attrTable @PRG-ROM : Byte[8][8]
 	
 	paddle1 : Paddle{ number : 1 }
 	paddle2 : Paddle{ number : 2 }
@@ -25,18 +25,18 @@ Playfield {
 	}
 	
 	_resetBallAndPaddles() {
-		ball.x := ($LEFT + $RIGHT) / 2 - Ball.$WIDTH_PX / 2 
-		ball.y := ($TOP + $BOTTOM) / 2 - Ball.$HEIGHT_PX / 2
+		ball.x := ($LEFT + $RIGHT - Ball.$WIDTH_PX) / 2 
+		ball.y := ($TOP + $BOTTOM - Ball.$HEIGHT_PX) / 2
 		ball.speedX := 0
 		ball.speedY := 0
 		ball.out := false
 		
 		paddle1.x := $LEFT
-		paddle1.y := ($TOP + $BOTTOM / 2) - Paddle.$HEIGHT_PX / 2
+		paddle1.y := ($TOP + $BOTTOM - Paddle.$HEIGHT_PX) / 2
 		paddle1.direction := 0
 		
 		paddle2.x := $RIGHT - Paddle.$WIDTH_PX 
-		paddle2.y := ($TOP + $BOTTOM / 2) - Paddle.$HEIGHT_PX / 2
+		paddle2.y := ($TOP + $BOTTOM - Paddle.$HEIGHT_PX) / 2
 		paddle2.direction := 0
 	}
 	
@@ -53,6 +53,11 @@ Playfield {
 		PPU.$setBackgroundPalettes(Pong.$palettes)
 		PPU.$setSpritesPalettes(Pong.$palettes)
 		
+		// hide sprites
+		for (i : 0; i < 64; ++i) {
+			PPU.$drawSprite(i, 0, 0, 0, 0)
+		}
+		
 		// clear screen
 		for (row : 0; row < PPU.$SCREEN_HEIGHT_TILES; ++row) {
 			for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
@@ -67,7 +72,7 @@ Playfield {
 		}
 		
 		// middle line
-		for (row : $TOP / 8; row < Playfield.$BOTTOM / 8; ++row) {
+		for (row : $TOP / 8; row < Playfield.$BOTTOM / 8; row += 3) {
 			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2 - 1, 2)
 			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 3)
 		}
@@ -92,15 +97,15 @@ Playfield {
 	}
 	
 	drawScore1() {
-		_drawDigit(1, 56, score1)
+		_drawDigit(0, 56, score1)
 	}
 	
 	drawScore2() {
-		_drawDigit(3, 192, score2)
+		_drawDigit(1, 192, score2)
 	}
 	
 	_drawDigit(Byte pos, Byte xOffset, Byte digit) {
-		pos := 10 + (pos * 13) 
+		pos := 6 + (pos * 13) 
 		
 		// draws an 8 using a 5x3 table of tiles
 		// 1st line
@@ -221,6 +226,35 @@ Playfield {
 			// 5th line
 			PPU.$drawSprite(pos + 11, xOffset + 08, 56, $TILE_OFF, 0)
 			PPU.$drawSprite(pos + 12, xOffset + 16, 56, $TILE_OFF, 0)
+		}
+	}
+	
+	drawGameOver() {
+		x : (PPU.$SCREEN_WIDTH_PX - 9 * 8) / 2
+		y : ($TOP + $BOTTOM) / 2
+		PPU.$drawSprite(32, x, y, 'G', 0)
+		PPU.$drawSprite(33, x += 8, y, 'A', 0)
+		PPU.$drawSprite(34, x += 8, y, 'M', 0)
+		PPU.$drawSprite(35, x += 8, y, 'E', 0)
+		PPU.$drawSprite(36, x += 18, y, 'O', 0)
+		PPU.$drawSprite(37, x += 8, y, 'V', 0)
+		PPU.$drawSprite(38, x += 8, y, 'E', 0)
+		PPU.$drawSprite(39, x += 8, y, 'R', 0)
+	}
+	
+	drawPause() {
+		x : (PPU.$SCREEN_WIDTH_PX - 5 * 8) / 2
+		y : ($TOP + $BOTTOM) / 2
+		PPU.$drawSprite(32, x, y, 'P', 0)
+		PPU.$drawSprite(33, x += 8, y, 'A', 0)
+		PPU.$drawSprite(34, x += 8, y, 'U', 0)
+		PPU.$drawSprite(35, x += 8, y, 'S', 0)
+		PPU.$drawSprite(36, x += 8, y, 'E', 0)
+	}
+	
+	hidePause() {
+		for (i : 32; i < 37; ++i) {
+			PPU.$drawSprite(i, 0, 0, 0, 0)
 		}
 	}
 }

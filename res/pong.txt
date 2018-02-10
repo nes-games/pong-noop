@@ -64,6 +64,7 @@ PAUSE
 todo
 	1. refactor header from Class to Constants
 	2. make @*-ROM constants
+	3. validate field declaring cross refeierence
 bugs
 	1.
 		p1 : Paddle{ x : 0 }
@@ -74,4 +75,4 @@ bugs
 	3.
 		++obj.var dont works
 	4.
-		@Inline + non static method + field ref = npe
+		@Inline + non static method + field ref = npe (make @Inline static?)

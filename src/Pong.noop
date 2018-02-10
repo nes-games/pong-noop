@@ -58,7 +58,7 @@ Pong extends Game {
 				if ($timer.isStopped) {
 					$timer.counter := 1
 				
-					$playfield.ball.update($playfield.paddle1, $playfield.paddle2)
+					$playfield.ball.move($playfield.paddle1, $playfield.paddle2)
 				
 					if ($playfield.ball.out) {
 						$state.next
@@ -120,10 +120,15 @@ Pong extends Game {
 			} else if ($state.current = State.$GAME_OVER) {
 			
 			} else if ($state.current = State.$PAUSE) {
+				if ($state.start) {
+					$playfield.drawPause
+				}
+				
 				Controllers.$update
 			
 				if ((Controller1.$isPressedStart and not Controller1.$wasPressedStart) 
 						or (not $matchVsCPU and Controller2.$isPressedStart and not Controller2.$wasPressedStart)) {
+					$playfield.hidePause
 					$state.goTo(State.$PLAY)
 				}
 			}
