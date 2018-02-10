@@ -1,20 +1,25 @@
 Pong extends Game {
 	
+	$SFX_HIT : 0
+	$SFX_ALARM : 1
+	$SFX_SCORE : 2
+	$MAX_SCORE : 15
+
 	$sfx @PRG-ROM : "file://pong-sfx.asm"
 	$spGraphics @CHR-ROM : "file://graphics.chr"
 	$bgGraphics @CHR-ROM : "file://graphics.chr"
 	$palettes @PRG-ROM : [
-		[0x1D, 0x30, 0x30, 0x30],
-		[0x1D, 0x30, 0x30, 0x30],
-		[0x1D, 0x30, 0x30, 0x30],
-		[0x1D, 0x30, 0x30, 0x30] 
-//		[0x1D, 0x02, 0x02, 0x02], 
-//		[0x1D, 0x16, 0x16, 0x16], 
-//		[0x37, 0x29, 0x29, 0x29]
+		[0x1D, 0x30, 0x30, 0x30], 
+		[0x1D, 0x02, 0x02, 0x02], 
+		[0x1D, 0x16, 0x16, 0x16], 
+		[0x37, 0x29, 0x29, 0x29]
 	]
 	
+	$matchVsCPU : true
 	$title : TitleScreen
-	$match : Match
+	$playfield : Playfield
+	$state : State
+	$timer : Timer
 	
 	$reset() {
 		FamiTone2NTSC.$stopMusic//TODO change to init()
@@ -23,19 +28,111 @@ Pong extends Game {
 		PPU.$hideBackground
 		PPU.$hideSprites
 		PPU.$update
-		State.$current := State.$MATCH
+//		$state.current := State.$MATCH
+
 		forever {
-			if (State.$current = State.$TITLE) {
+			if ($state.current = State.$TITLE) {
 				$title.update
-			} else {
-				$match.update
+			} else if ($state.current = State.$MATCH) {
+				if ($state.start) {
+					FamiTone2NTSC.$playSfx($SFX_HIT, FamiTone2NTSC.$FT_SFX_CH0)
+					$timer.counter := 30
+					$state.start := false
+				} else if ($timer.isStopped) {
+					$playfield.reset
+					$playfield.draw
+					$state.next			
+				}
+			} else if ($state.current = State.$SERVE) {
+				if ($state.start) {
+					$playfield.restart
+					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					$timer.counter := 30
+					$state.start := false
+				} else if ($timer.isStopped) {
+					$playfield.ball.speedX := -3
+					$playfield.ball.speedY := 0
+					$state.next
+				}
+			} else if ($state.current = State.$PLAY) {
+				if ($timer.isStopped) {
+					$timer.counter := 1
+				
+					$playfield.ball.update($playfield.paddle1, $playfield.paddle2)
+				
+					if ($playfield.ball.out) {
+						$state.next
+					} else {
+						Controllers.$update
+				
+						if (Controller1.$isPressedUp) {
+							$playfield.paddle1.moveUp
+						} else if (Controller1.$isPressedDown) {
+							$playfield.paddle1.moveDown
+						} else {
+							$playfield.paddle1.direction := 0
+						}
+				
+						if ($matchVsCPU) {
+							$playfield.paddle2.moveForCPU($playfield.ball)
+						} else if (Controller2.$isPressedUp) {
+							$playfield.paddle1.moveUp
+						} else if (Controller2.$isPressedDown) {
+							$playfield.paddle1.moveDown
+						} else {
+							$playfield.paddle2.direction := 0
+						}
+					
+						if ((Controller1.$isPressedStart and not Controller1.$wasPressedStart) 
+								or (not $matchVsCPU and Controller2.$isPressedStart and not Controller2.$wasPressedStart)) {
+							$state.goTo(State.$PAUSE)
+						}
+					}
+				}
+			} else if ($state.current = State.$POINT) {
+				if ($state.start) {
+					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					$timer.counter := 30
+					$state.start := false
+				} else if ($timer.isStopped) {
+					$state.next
+				}
+			} else if ($state.current = State.$SCORE) {
+				if ($state.start) {
+					if ($playfield.ball.x > Playfield.$RIGHT) {
+						$playfield.score1 += 1
+						$playfield.drawScore1
+					} else {
+						$playfield.score2 += 1
+						$playfield.drawScore2
+					}
+				
+					FamiTone2NTSC.$playSfx($SFX_SCORE, FamiTone2NTSC.$FT_SFX_CH0)
+					$timer.counter := 15
+					$state.start := false
+				} else if ($timer.isStopped) {
+					if ($playfield.score1 >= $MAX_SCORE or $playfield.score2 >= $MAX_SCORE) {
+						$state.next
+					} else {
+						$state.goTo(State.$SERVE)
+					}
+				}
+			} else if ($state.current = State.$GAME_OVER) {
+			
+			} else if ($state.current = State.$PAUSE) {
+				Controllers.$update
+			
+				if ((Controller1.$isPressedStart and not Controller1.$wasPressedStart) 
+						or (not $matchVsCPU and Controller2.$isPressedStart and not Controller2.$wasPressedStart)) {
+					$state.goTo(State.$PLAY)
+				}
 			}
 		}
 	}
 	
 	$nmi() {
 		FamiTone2NTSC.$update
-		Timer.$update
+		$timer.update
 	}
 	
 }

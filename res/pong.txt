@@ -61,6 +61,9 @@ PAUSE
 0 0
 000
 
+todo
+	1. refactor header from Class to Constants
+	2. make @*-ROM constants
 bugs
 	1.
 		p1 : Paddle{ x : 0 }
@@ -70,3 +73,5 @@ bugs
 		method <- invocation without brackets dont validade params
 	3.
 		++obj.var dont works
+	4.
+		@Inline + non static method + field ref = npe

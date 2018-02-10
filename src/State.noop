@@ -12,19 +12,21 @@ State {
 	_$FIRST : $TITLE
 	_$LAST : $PAUSE
 	
-	$current : _$FIRST
-	$start : true
+	current : _$FIRST
+	start : true
 	
-	$next() @Inline {
-		if (++$current > _$LAST) {
-			$current := _$FIRST
+	next() {
+		current += 1
+		
+		if (current > _$LAST) {
+			current := _$FIRST
 		}
 		
-		$start := true
+		start := true
 	}
 	
-	$goTo(Byte state) {
-		$current := state
-		$start := true
+	goTo(Byte state) {
+		current := state
+		start := true
 	}
 }

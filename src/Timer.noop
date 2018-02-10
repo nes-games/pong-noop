@@ -1,14 +1,14 @@
 Timer {
 	
-	$counter : Int
+	counter : Int
 	
-	$isStopped() {
-		return $counter = 0
+	isStopped() {
+		return counter = 0
 	}
 	
-	$update() @Inline {
-		if ($counter > 0) {
-			--$counter
+	update() {
+		if (counter > 0) {
+			counter -= 1
 		}
 	}
 }

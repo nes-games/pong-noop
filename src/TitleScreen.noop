@@ -33,12 +33,7 @@ TitleScreen {
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	]
 	
-	_$titleAttrTable @PRG-ROM : [
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0], 
-		[0, 0, 0, 0, 0, 0, 0, 0]
-	]
+	_$titleAttrTable @PRG-ROM : Byte[8][8]
 	
 	_$CURSOR : 1
 	
@@ -65,7 +60,7 @@ TitleScreen {
 	}
 	
 	_drawCursor() {
-		if (Pong.$match.vsCPU) {
+		if (Pong.$matchVsCPU) {
 			PPU.$drawSprite(1, 50, 21 * 8 - 1, _$CURSOR, 0)
 		} else {
 			PPU.$drawSprite(1, 50, 23 * 8 - 1, _$CURSOR, 0)
@@ -73,21 +68,21 @@ TitleScreen {
 	}
 	
 	update() {
-		if (State.$start) {
-			Pong.$match.vsCPU := true
+		if (Pong.$state.start) {
+			Pong.$state.start := false
+			Pong.$matchVsCPU := true
 			_draw
-			State.$start := false
 		} else {
 			Controller1.$update
 			
 			if ((Controller1.$isPressedSelect and not Controller1.$wasPressedSelect)
 					or (Controller1.$isPressedDown and not Controller1.$wasPressedDown)
 					or (Controller1.$isPressedUp and not Controller1.$wasPressedUp)) {
-				Pong.$match.vsCPU := not Pong.$match.vsCPU
+				Pong.$matchVsCPU := not Pong.$matchVsCPU
 				
 				_drawCursor
 			} else if (Controller1.$isPressedStart or Controller1.$isPressedA) {
-				State.$next
+				Pong.$state.next
 			}
 		}
 	}
