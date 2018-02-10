@@ -28,7 +28,6 @@ Pong extends Game {
 		PPU.$hideBackground
 		PPU.$hideSprites
 		PPU.$update
-//		$state.current := State.$MATCH
 
 		forever {
 			if ($state.current = State.$TITLE) {
@@ -76,9 +75,9 @@ Pong extends Game {
 						if ($matchVsCPU) {
 							$playfield.paddle2.moveForCPU($playfield.ball)
 						} else if (Controller2.$isPressedUp) {
-							$playfield.paddle1.moveUp
+							$playfield.paddle2.moveUp
 						} else if (Controller2.$isPressedDown) {
-							$playfield.paddle1.moveDown
+							$playfield.paddle2.moveDown
 						} else {
 							$playfield.paddle2.direction := 0
 						}
@@ -118,9 +117,22 @@ Pong extends Game {
 					}
 				}
 			} else if ($state.current = State.$GAME_OVER) {
-			
+				if ($state.start) {
+					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					$playfield.drawWinner
+					$timer.counter := 240
+					$state.start := false
+				} else if ($timer.counter = 180) {
+					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+				} else if ($timer.counter = 120) {
+					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					$playfield.drawGameOver
+				} else if ($timer.isStopped) {
+					$state.goTo(State.$TITLE)
+				}
 			} else if ($state.current = State.$PAUSE) {
 				if ($state.start) {
+					$state.start := false
 					$playfield.drawPause
 				}
 				

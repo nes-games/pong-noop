@@ -5,6 +5,10 @@ Ball {
 	$MAX_SPEED_UP : -2
 	$MAX_SPEED_DOWN : 2
 	
+	_$SPRITE_IDX : 1
+	_$SPRITE_OFF : 0
+	_$SPRITE_ON : 1
+	
 	x : 0
 	y : 0
 	
@@ -14,7 +18,11 @@ Ball {
 	out : false
 	
 	draw() {
-		PPU.$drawSprite(1, x, y, 1, 0)
+		PPU.$drawSprite(_$SPRITE_IDX, x, y, _$SPRITE_ON, 0)
+	}
+	
+	hide() {
+		PPU.$drawSprite(_$SPRITE_IDX, 0, 0, 0, _$SPRITE_OFF)
 	}
 	
 	move(Paddle paddle1, Paddle paddle2) {

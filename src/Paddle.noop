@@ -4,6 +4,14 @@ Paddle {
 	$HEIGHT_PX : 2 * Ball.$HEIGHT_PX
 	$SPEED : 2
 	
+	_$SPRITE_1_1_IDX : 2
+	_$SPRITE_1_2_IDX : _$SPRITE_1_1_IDX + 1
+	_$SPRITE_2_1_IDX : _$SPRITE_1_2_IDX + 1
+	_$SPRITE_2_2_IDX : _$SPRITE_2_1_IDX + 1
+	_$SPRITE_OFF : 0
+	_$SPRITE_1_ON : 2
+	_$SPRITE_2_ON : 3
+	
 	x : 0
 	y : 0
 	number : 0
@@ -11,11 +19,21 @@ Paddle {
 	
 	draw() {
 		if (number = 1) {
-			PPU.$drawSprite(2, x, y, 2, 0)
-			PPU.$drawSprite(3, x, y + 8, 2, 0)
+			PPU.$drawSprite(_$SPRITE_1_1_IDX, x, y, _$SPRITE_1_ON, 0)
+			PPU.$drawSprite(_$SPRITE_1_2_IDX, x, y + 8, _$SPRITE_1_ON, 0)
 		} else {
-			PPU.$drawSprite(4, x, y, 3, 0)
-			PPU.$drawSprite(5, x, y + 8, 3, 0)
+			PPU.$drawSprite(_$SPRITE_2_1_IDX, x, y, _$SPRITE_2_ON, 0)
+			PPU.$drawSprite(_$SPRITE_2_2_IDX, x, y + 8, _$SPRITE_2_ON, 0)
+		}
+	}
+	
+	hide() {
+		if (number = 1) {
+			PPU.$drawSprite(_$SPRITE_1_1_IDX, 0, 0, 0, 0)
+			PPU.$drawSprite(_$SPRITE_1_2_IDX, 0, 0, 0, 0)
+		} else {
+			PPU.$drawSprite(_$SPRITE_2_1_IDX, 0, 0, 0, 0)
+			PPU.$drawSprite(_$SPRITE_2_2_IDX, 0, 0, 0, 0)
 		}
 	}
 	
