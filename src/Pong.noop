@@ -49,7 +49,7 @@ Pong extends Game {
 					$timer.counter := 30
 					$state.start := false
 				} else if ($timer.isStopped) {
-					$playfield.ball.speedX := -3
+					$playfield.ball.speedX := -3//TODO randomize
 					$playfield.ball.speedY := 0
 					$state.next
 				}
