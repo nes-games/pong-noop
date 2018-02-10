@@ -103,7 +103,7 @@ Playfield {
 	}
 	
 	drawScore2() {
-		_drawScore(2, 3 * (($LEFT + $RIGHT) / 4) - 12, score2)
+		_drawScore(2, 3 * ($LEFT + $RIGHT) / 4 - 12, score2)
 	}
 	
 	_drawScore(Byte player, Byte xOffset, Byte digit) {
@@ -315,7 +315,7 @@ Playfield {
 	}
 	
 	hidePause() {
-		for (i : 32; i < 37; ++i) {
+		for (i : _$TEXT_SPR_IDX; i < _$TEXT_SPR_IDX + 5; ++i) {
 			PPU.$drawSprite(i, 0, 0, 0, 0)
 		}
 	}
