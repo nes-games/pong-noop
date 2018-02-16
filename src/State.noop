@@ -16,9 +16,7 @@ State {
 	start : true
 	
 	next() {
-		current += 1
-		
-		if (current > _$LAST) {
+		if (++current > _$LAST) {
 			current := _$FIRST
 		}
 		
