@@ -1,6 +1,6 @@
 TitleScreen {
 	
-	_$titleNameTable @PRG-ROM : [
+	_$NAME_TABLE @PRG-ROM : [
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
@@ -33,8 +33,6 @@ TitleScreen {
 		[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 	]
 	
-	_$titleAttrTable @PRG-ROM : Byte[8][8]
-	
 	_$CURSOR_SPRITE : 1
 	
 	_draw() {
@@ -47,14 +45,14 @@ TitleScreen {
 			PPU.$drawSprite(i, 0, 0, 0, 0)
 		}
 		
-		PPU.$drawBackground(PPU.$SCREEN_TOP_LEFT, _$titleNameTable)
+		PPU.$drawBackground(PPU.$SCREEN_TOP_LEFT, _$NAME_TABLE)
 		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 21, (PPU.$SCREEN_WIDTH_TILES - 14) / 2, ["1 player match"])
 		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 23, (PPU.$SCREEN_WIDTH_TILES - 14) / 2, ["2 players match"])
 		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 27, (PPU.$SCREEN_WIDTH_TILES - 12) / 2, ["Parisoft 2018"])
 		
-		PPU.$setSpritesPalettes(Pong.$palettes)
-		PPU.$setBackgroundPalettes(Pong.$palettes)
-		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, _$titleAttrTable)
+		PPU.$setSpritesPalettes(Pong.$PALETTES)
+		PPU.$setBackgroundPalettes(Pong.$PALETTES)
+		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
 		
 		_drawCursor
 		
@@ -66,10 +64,24 @@ TitleScreen {
 	
 	_drawCursor() {
 		if (Pong.$matchVsCPU) {
-			PPU.$drawSprite(1, 50, 21 * 8 - 1, _$CURSOR_SPRITE, 0)
+			PPU.$drawSprite(1, 50, 21 * 8 - 1, _$CURSOR_SPRITE, Pong.$palette)
 		} else {
-			PPU.$drawSprite(1, 50, 23 * 8 - 1, _$CURSOR_SPRITE, 0)
+			PPU.$drawSprite(1, 50, 23 * 8 - 1, _$CURSOR_SPRITE, Pong.$palette)
 		}
+	}
+
+	_repaint() {
+		PPU.$hideBackground
+		PPU.$hideSprites
+		PPU.$update
+		
+		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
+		_drawCursor
+		
+		PPU.$waitVBlank
+		PPU.$showBackground
+		PPU.$showSprites
+		PPU.$update
 	}
 	
 	update() {
@@ -86,6 +98,18 @@ TitleScreen {
 				Pong.$matchVsCPU := not Pong.$matchVsCPU
 				
 				_drawCursor
+			} else if ((Controller1.$isPressedLeft and not Controller1.$wasPressedLeft)) {
+				if (--Pong.$palette > 3) {
+					Pong.$palette := 3
+				}
+				
+				_repaint
+			} else if ((Controller1.$isPressedRight and not Controller1.$wasPressedRight)) {
+				if (++Pong.$palette > 3) {
+					Pong.$palette := 0
+				}
+				
+				_repaint
 			} else if (Controller1.$isPressedStart or Controller1.$isPressedA) {
 				Pong.$state.next
 			}

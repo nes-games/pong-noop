@@ -10,8 +10,6 @@ Playfield {
 	_$SCORE_SPR_IDX : 6
 	_$TEXT_SPR_IDX : 32
 	
-	$attrTable @PRG-ROM : Byte[8][8]
-	
 	paddle1 : Paddle{ number : 1 }
 	paddle2 : Paddle{ number : 2 }
 	ball : Ball
@@ -52,8 +50,8 @@ Playfield {
 		PPU.$hideSprites
 		PPU.$update
 		
-		PPU.$setBackgroundPalettes(Pong.$palettes)
-		PPU.$setSpritesPalettes(Pong.$palettes)
+		PPU.$setBackgroundPalettes(Pong.$PALETTES)
+		PPU.$setSpritesPalettes(Pong.$PALETTES)
 		
 		// hide sprites
 		for (i : 0; i < 64; ++i) {
@@ -79,7 +77,7 @@ Playfield {
 			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 3)
 		}
 		
-		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, $attrTable)
+		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
 		
 		drawScore1
 		drawScore2
@@ -107,127 +105,128 @@ Playfield {
 	}
 	
 	_drawScore(Byte player, Byte xOffset, Byte digit) {
+		pal : Pong.$palette
 		idx : _$SCORE_SPR_IDX + (player - 1) * 13 
 		
 		// draws an 8 using a 5x3 table of tiles
 		// 1st line
-		PPU.$drawSprite(idx + 0, xOffset + 00, 24, _$TILE_ON, 0)
-		PPU.$drawSprite(idx + 1, xOffset + 08, 24, _$TILE_ON, 0)
-		PPU.$drawSprite(idx + 2, xOffset + 16, 24, _$TILE_ON, 0)
+		PPU.$drawSprite(idx + 0, xOffset + 00, 24, _$TILE_ON, pal)
+		PPU.$drawSprite(idx + 1, xOffset + 08, 24, _$TILE_ON, pal)
+		PPU.$drawSprite(idx + 2, xOffset + 16, 24, _$TILE_ON, pal)
 		// 2nd line
-		PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_ON, 0)
-		PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_ON, 0)
+		PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_ON, pal)
+		PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_ON, pal)
 		// 3rd line
-		PPU.$drawSprite(idx + 5, xOffset + 00, 40, _$TILE_ON, 0)
-		PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_ON, 0)
-		PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_ON, 0)
+		PPU.$drawSprite(idx + 5, xOffset + 00, 40, _$TILE_ON, pal)
+		PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_ON, pal)
+		PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_ON, pal)
 		// 4th line
-		PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_ON, 0)
-		PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_ON, 0)
+		PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_ON, pal)
+		PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_ON, pal)
 		// 5th line
-		PPU.$drawSprite(idx + 10, xOffset + 00, 56, _$TILE_ON, 0)
-		PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_ON, 0)
-		PPU.$drawSprite(idx + 12, xOffset + 16, 56, _$TILE_ON, 0)
+		PPU.$drawSprite(idx + 10, xOffset + 00, 56, _$TILE_ON, pal)
+		PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_ON, pal)
+		PPU.$drawSprite(idx + 12, xOffset + 16, 56, _$TILE_ON, pal)
 
 		//derivates all from 8
 
 		if (digit = 0) {
 			// 3rd line
-			PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_OFF, pal)
 		} else if (digit = 1) {
 			// 1st line
-			PPU.$drawSprite(idx + 0, xOffset + 00, 24, _$TILE_OFF, 0)
-			PPU.$drawSprite(idx + 1, xOffset + 08, 24, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 0, xOffset + 00, 24, _$TILE_OFF, pal)
+			PPU.$drawSprite(idx + 1, xOffset + 08, 24, _$TILE_OFF, pal)
 			// 2nd line
-			PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_OFF, pal)
 			// 3rd line
-			PPU.$drawSprite(idx + 5, xOffset + 00, 40, _$TILE_OFF, 0)
-			PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 5, xOffset + 00, 40, _$TILE_OFF, pal)
+			PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, pal)
 			// 5th line
-			PPU.$drawSprite(idx + 10, xOffset + 00, 56, _$TILE_OFF, 0)
-			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 10, xOffset + 00, 56, _$TILE_OFF, pal)
+			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, pal)
 		} else if (digit = 2) {
 			// 2nd line
-			PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, pal)
 		} else if (digit = 3) {
 			// 2nd line
-			PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_OFF, pal)
 			// 3rd line
-			PPU.$drawSprite(idx + 5, xOffset + 00, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 5, xOffset + 00, 40, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, pal)
 		} else if (digit = 4) {
 			// 1st line
-			PPU.$drawSprite(idx + 1, xOffset + 08, 24, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 1, xOffset + 08, 24, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, pal)
 			// 5th line
-			PPU.$drawSprite(idx + 10, xOffset + 00, 56, _$TILE_OFF, 0)
-			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 10, xOffset + 00, 56, _$TILE_OFF, pal)
+			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, pal)
 		} else if (digit = 5) {
 			// 2nd line
-			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, pal)
 		} else if (digit = 6) {
 			// 2nd line
-			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, pal)
 		} else if (digit = 7) {
 			// 2nd line
-			PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 3, xOffset + 00, 32, _$TILE_OFF, pal)
 			// 3rd line
-			PPU.$drawSprite(idx + 5, xOffset + 00, 40, _$TILE_OFF, 0)
-			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 5, xOffset + 00, 40, _$TILE_OFF, pal)
+			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, pal)
 			// 5th line
-			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, 0)
-			PPU.$drawSprite(idx + 12, xOffset + 16, 56, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, pal)
+			PPU.$drawSprite(idx + 12, xOffset + 16, 56, _$TILE_OFF, pal)
 		} else if (digit = 9) {
 			// 4th line
-			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 8, xOffset + 00, 48, _$TILE_OFF, pal)
 		} else if (digit = 10) {
 			// 5th line
-			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, pal)
 		} else if (digit = 11) {
 			// 3rd line
-			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, pal)
 		} else if (digit = 12) {
 			// 2nd line
-			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, pal)
 			// 3rd line
-			PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_OFF, 0)
-			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_OFF, pal)
+			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, pal)
 		} else if (digit = 13) {
 			// 1st line
-			PPU.$drawSprite(idx + 2, xOffset + 16, 24, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 2, xOffset + 16, 24, _$TILE_OFF, pal)
 			// 3rd line
-			PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 6, xOffset + 08, 40, _$TILE_OFF, pal)
 			// 5th line
-			PPU.$drawSprite(idx + 12, xOffset + 16, 56, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 12, xOffset + 16, 56, _$TILE_OFF, pal)
 		} else if (digit = 14) {
 			// 2nd line
-			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, pal)
 			// 3rd line
-			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, pal)
 		} else if (digit = 15) {
 			// 2nd line
-			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 4, xOffset + 16, 32, _$TILE_OFF, pal)
 			// 3rd line
-			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 7, xOffset + 16, 40, _$TILE_OFF, pal)
 			// 4th line
-			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 9, xOffset + 16, 48, _$TILE_OFF, pal)
 			// 5th line
-			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, 0)
-			PPU.$drawSprite(idx + 12, xOffset + 16, 56, _$TILE_OFF, 0)
+			PPU.$drawSprite(idx + 11, xOffset + 08, 56, _$TILE_OFF, pal)
+			PPU.$drawSprite(idx + 12, xOffset + 16, 56, _$TILE_OFF, pal)
 		}
 	}
 	
@@ -240,6 +239,7 @@ Playfield {
 			return _drawCpuWins
 		}
 		
+		pal : Pong.$palette
 		x : (PPU.$SCREEN_WIDTH_PX - 8 * 8) / 2
 		y : ($TOP + $BOTTOM) / 2 - 17
 		p : '1'
@@ -248,75 +248,78 @@ Playfield {
 			p := '2'
 		}
 		
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 0, x, y, 'P', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 1, x += 8, y, 'L', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 2, x += 8, y, 'A', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 3, x += 8, y, 'Y', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 4, x += 8, y, 'E', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 5, x += 8, y, 'R', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 6, x += 16, y, p, 0)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 0, x, y, 'P', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 1, x += 8, y, 'L', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 2, x += 8, y, 'A', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 3, x += 8, y, 'Y', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 4, x += 8, y, 'E', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 5, x += 8, y, 'R', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 6, x += 16, y, p, pal)
 		
 		x := (PPU.$SCREEN_WIDTH_PX - 4 * 8) / 2
 		y := ($TOP + $BOTTOM) / 2
 		
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 07, x, y, 'W', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 08, x += 8, y, 'I', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 09, x += 8, y, 'N', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 10, x += 8, y, 'S', 0)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 07, x, y, 'W', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 08, x += 8, y, 'I', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 09, x += 8, y, 'N', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 10, x += 8, y, 'S', pal)
 	}
 	
 	_drawCpuWins() {
+		pal : Pong.$palette
 		x : (PPU.$SCREEN_WIDTH_PX - 3 * 8) / 2
 		y : ($TOP + $BOTTOM) / 2 - 17
 		
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 0, x, y, 'C', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 1, x += 8, y, 'P', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 2, x += 8, y, 'U', 0)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 0, x, y, 'C', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 1, x += 8, y, 'P', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 2, x += 8, y, 'U', pal)
 		
 		x := (PPU.$SCREEN_WIDTH_PX - 4 * 8) / 2
 		y := ($TOP + $BOTTOM) / 2
 		
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 3, x, y, 'W', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 4, x += 8, y, 'I', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 5, x += 8, y, 'N', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 6, x += 8, y, 'S', 0)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 3, x, y, 'W', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 4, x += 8, y, 'I', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 5, x += 8, y, 'N', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 6, x += 8, y, 'S', pal)
 	}
 	
 	drawGameOver() {
+		pal : Pong.$palette
 		x : (PPU.$SCREEN_WIDTH_PX - 4 * 8) / 2
 		y : ($TOP + $BOTTOM) / 2 - 17
 		
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 0, x, y, 'G', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 1, x + 08, y, 'A', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 2, x + 16, y, 'M', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 3, x + 24, y, 'E', 0)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 0, x, y, 'G', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 1, x + 08, y, 'A', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 2, x + 16, y, 'M', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 3, x + 24, y, 'E', pal)
 		
 		y := ($TOP + $BOTTOM) / 2
 		
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 4, x, y, 'O', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 5, x + 08, y, 'V', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 6, x + 16, y, 'E', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 7, x + 24, y, 'R', 0)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 4, x, y, 'O', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 5, x + 08, y, 'V', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 6, x + 16, y, 'E', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 7, x + 24, y, 'R', pal)
 		
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 08, 0, 0, _$TILE_OFF, 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 09, 0, 0, _$TILE_OFF, 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 10, 0, 0, _$TILE_OFF, 0)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 08, 0, 0, _$TILE_OFF, pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 09, 0, 0, _$TILE_OFF, pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 10, 0, 0, _$TILE_OFF, pal)
 	}
 	
 	drawPause() {
+		pal : Pong.$palette
 		x : (PPU.$SCREEN_WIDTH_PX - 5 * 8) / 2
 		y : ($TOP + $BOTTOM) / 2
 		
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 0, x, y, 'P', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 1, x += 8, y, 'A', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 2, x += 8, y, 'U', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 3, x += 8, y, 'S', 0)
-		PPU.$drawSprite(_$TEXT_SPR_IDX + 4, x += 8, y, 'E', 0)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 0, x, y, 'P', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 1, x += 8, y, 'A', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 2, x += 8, y, 'U', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 3, x += 8, y, 'S', pal)
+		PPU.$drawSprite(_$TEXT_SPR_IDX + 4, x += 8, y, 'E', pal)
 	}
 	
 	hidePause() {
 		for (i : _$TEXT_SPR_IDX; i < _$TEXT_SPR_IDX + 5; ++i) {
-			PPU.$drawSprite(i, 0, 0, 0, 0)
+			PPU.$drawSprite(i, 0, 0, 0, Pong.$palette)
 		}
 	}
 }

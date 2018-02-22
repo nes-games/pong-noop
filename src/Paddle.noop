@@ -18,12 +18,14 @@ Paddle {
 	direction : SByte
 	
 	draw() {
+		pal : Pong.$palette
+		
 		if (number = 1) {
-			PPU.$drawSprite(_$SPRITE_1_1_IDX, x, y, _$SPRITE_1_ON, 0)
-			PPU.$drawSprite(_$SPRITE_1_2_IDX, x, y + 8, _$SPRITE_1_ON, 0)
+			PPU.$drawSprite(_$SPRITE_1_1_IDX, x, y, _$SPRITE_1_ON, pal)
+			PPU.$drawSprite(_$SPRITE_1_2_IDX, x, y + 8, _$SPRITE_1_ON, pal)
 		} else {
-			PPU.$drawSprite(_$SPRITE_2_1_IDX, x, y, _$SPRITE_2_ON, 0)
-			PPU.$drawSprite(_$SPRITE_2_2_IDX, x, y + 8, _$SPRITE_2_ON, 0)
+			PPU.$drawSprite(_$SPRITE_2_1_IDX, x, y, _$SPRITE_2_ON, pal)
+			PPU.$drawSprite(_$SPRITE_2_2_IDX, x, y + 8, _$SPRITE_2_ON, pal)
 		}
 	}
 	

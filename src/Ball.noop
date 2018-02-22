@@ -18,11 +18,11 @@ Ball {
 	out : false
 	
 	draw() {
-		PPU.$drawSprite(_$SPRITE_IDX, x, y, _$SPRITE_ON, 0)
+		PPU.$drawSprite(_$SPRITE_IDX, x, y, _$SPRITE_ON, Pong.$palette)
 	}
 	
 	hide() {
-		PPU.$drawSprite(_$SPRITE_IDX, 0, 0, 0, _$SPRITE_OFF)
+		PPU.$drawSprite(_$SPRITE_IDX, 0, 0, _$SPRITE_OFF, 0)
 	}
 	
 	move(Paddle paddle1, Paddle paddle2) {
