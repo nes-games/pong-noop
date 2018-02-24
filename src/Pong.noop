@@ -1,4 +1,4 @@
-Pong extends Game {
+Pong {
 
 	$PRG_SIZE @INES-PRG : 16
 	$CHR_SIZE @INES-CHR : 8
