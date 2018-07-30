@@ -1,9 +1,9 @@
 Pong {
 
-	$PRG_SIZE @INES-PRG : 16
-	$CHR_SIZE @INES-CHR : 8
-	$MAPPER @INES-Mapper : 0
-	$MIRROR @INES-Mirror : 1 //horizontal scroll
+	$PRG_SIZE @iNES-PRG : 16
+	$CHR_SIZE @iNES-CHR : 8
+	$MAPPER @iNES-Mapper : 0
+	$MIRROR @iNES-Mirror : 1 //horizontal scroll
 	
 	$SP_GRAPHICS @CHR-ROM : "file://graphics.chr"
 	$BG_GRAPHICS @CHR-ROM : "file://graphics.chr"
@@ -70,8 +70,8 @@ Pong {
 	$timer : Timer
 	
 	$main() @Reset {
-		FamiTone2NTSC.$stopMusic//TODO change to init()
-		FamiTone2NTSC.$openSfx($SFX)
+		FamiTone2.$stopMusic//TODO change to init()
+		FamiTone2.$openSfx($SFX)
 		
 		PPU.$hideBackground
 		PPU.$hideSprites
@@ -82,7 +82,7 @@ Pong {
 				$title.update
 			} else if ($state.current = State.$MATCH) {
 				if ($state.start) {
-					FamiTone2NTSC.$playSfx($SFX_HIT, FamiTone2NTSC.$FT_SFX_CH0)
+					FamiTone2.$playSfx($SFX_HIT, FamiTone2.$FT_SFX_CH0)
 					$timer.counter := 30
 					$state.start := false
 				} else if ($timer.isStopped) {
@@ -93,7 +93,7 @@ Pong {
 			} else if ($state.current = State.$SERVE) {
 				if ($state.start) {
 					$playfield.restart
-					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					FamiTone2.$playSfx($SFX_ALARM, FamiTone2.$FT_SFX_CH0)
 					$timer.counter := 30
 					$state.start := false
 				} else if ($timer.isStopped) {
@@ -138,7 +138,7 @@ Pong {
 				}
 			} else if ($state.current = State.$POINT) {
 				if ($state.start) {
-					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					FamiTone2.$playSfx($SFX_ALARM, FamiTone2.$FT_SFX_CH0)
 					$timer.counter := 30
 					$state.start := false
 				} else if ($timer.isStopped) {
@@ -154,7 +154,7 @@ Pong {
 						$playfield.drawScore2
 					}
 				
-					FamiTone2NTSC.$playSfx($SFX_SCORE, FamiTone2NTSC.$FT_SFX_CH0)
+					FamiTone2.$playSfx($SFX_SCORE, FamiTone2.$FT_SFX_CH0)
 					$timer.counter := 15
 					$state.start := false
 				} else if ($timer.isStopped) {
@@ -166,14 +166,14 @@ Pong {
 				}
 			} else if ($state.current = State.$GAME_OVER) {
 				if ($state.start) {
-					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					FamiTone2.$playSfx($SFX_ALARM, FamiTone2.$FT_SFX_CH0)
 					$playfield.drawWinner
 					$timer.counter := 240
 					$state.start := false
 				} else if ($timer.counter = 180) {
-					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					FamiTone2.$playSfx($SFX_ALARM, FamiTone2.$FT_SFX_CH0)
 				} else if ($timer.counter = 120) {
-					FamiTone2NTSC.$playSfx($SFX_ALARM, FamiTone2NTSC.$FT_SFX_CH0)
+					FamiTone2.$playSfx($SFX_ALARM, FamiTone2.$FT_SFX_CH0)
 					$playfield.drawGameOver
 				} else if ($timer.isStopped) {
 					$state.goTo(State.$TITLE)
@@ -196,8 +196,9 @@ Pong {
 	}
 	
 	$nmi() @NMI {
-		FamiTone2NTSC.$update
+		FamiTone2.$update
 		$timer.update
+		PPU.$flushSprites
 	}
 	
 }

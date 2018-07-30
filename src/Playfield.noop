@@ -61,23 +61,23 @@ Playfield {
 		// clear screen
 		for (row : 0; row < PPU.$SCREEN_HEIGHT_TILES; ++row) {
 			for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
-				PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, col, _$TILE_OFF)
+				PPU.$setNameTableTile(PPU.$NAME_TABLE_TOP_LEFT, row, col, _$TILE_OFF)
 			}
 		}
 		
 		// top and bottom borders
 		for (col : 0; col < PPU.$SCREEN_WIDTH_TILES; ++col) {
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, 1, col, _$TILE_ON)
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, $BOTTOM / 8, col, _$TILE_ON)
+			PPU.$setNameTableTile(PPU.$NAME_TABLE_TOP_LEFT, 1, col, _$TILE_ON)
+			PPU.$setNameTableTile(PPU.$NAME_TABLE_TOP_LEFT, $BOTTOM / 8, col, _$TILE_ON)
 		}
 		
 		// middle line
 		for (row : $TOP / 8; row < Playfield.$BOTTOM / 8; row += 3) {
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2 - 1, 2)
-			PPU.$drawBackgroundTile(PPU.$SCREEN_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 3)
+			PPU.$setNameTableTile(PPU.$NAME_TABLE_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2 - 1, 2)
+			PPU.$setNameTableTile(PPU.$NAME_TABLE_TOP_LEFT, row, PPU.$SCREEN_WIDTH_TILES / 2, 3)
 		}
 		
-		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
+		PPU.$setAttributeTable(PPU.$NAME_TABLE_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
 		
 		drawScore1
 		drawScore2

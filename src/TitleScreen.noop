@@ -45,16 +45,16 @@ TitleScreen {
 			PPU.$drawSprite(i, 0, 0, 0, 0)
 		}
 		
-		PPU.$drawBackground(PPU.$SCREEN_TOP_LEFT, _$NAME_TABLE)
-		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 21, (PPU.$SCREEN_WIDTH_TILES - 14) / 2, ["1 player match"])
-		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 23, (PPU.$SCREEN_WIDTH_TILES - 14) / 2, ["2 players match"])
-		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 27, (PPU.$SCREEN_WIDTH_TILES - 12) / 2, ["Parisoft 2018"])
+		PPU.$setNameTable(PPU.$NAME_TABLE_TOP_LEFT, _$NAME_TABLE)
+//		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 21, (PPU.$SCREEN_WIDTH_TILES - 14) / 2, ["1 player match"])
+//		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 23, (PPU.$SCREEN_WIDTH_TILES - 14) / 2, ["2 players match"])
+//		PPU.$drawBackgroundSection(PPU.$SCREEN_TOP_LEFT, 27, (PPU.$SCREEN_WIDTH_TILES - 12) / 2, ["Parisoft 2018"])
 		
 		PPU.$setSpritesPalettes(Pong.$PALETTES)
 		PPU.$setBackgroundPalettes(Pong.$PALETTES)
-		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
+//		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
 		
-		_drawCursor
+//		_drawCursor
 		
 		PPU.$waitVBlank
 		PPU.$showBackground
@@ -75,7 +75,7 @@ TitleScreen {
 		PPU.$hideSprites
 		PPU.$update
 		
-		PPU.$paintBackground(PPU.$SCREEN_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
+		PPU.$setAttributeTable(PPU.$NAME_TABLE_TOP_LEFT, Pong.$ATTR_TABLES[Pong.$palette])
 		_drawCursor
 		
 		PPU.$waitVBlank

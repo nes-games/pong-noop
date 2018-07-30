@@ -75,6 +75,6 @@ Ball {
 	}
 	
 	_$playHitFx() @Inline {
-		FamiTone2NTSC.$playSfx(Pong.$SFX_HIT, FamiTone2NTSC.$FT_SFX_CH0)
+		FamiTone2.$playSfx(Pong.$SFX_HIT, FamiTone2.$FT_SFX_CH0)
 	}
 }
